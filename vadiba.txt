@@ -1,0 +1,12 @@
+d - nolasa distanci
+c - system check
+w - wait
+f - go forward
+b - go backwards
+l - go left
+r - go right
+v - victory emote
+
+8 (num_up) - sensors uz prieksu
+4 (num_left) - sensors pa kreisi
+6 (num_right) - sensors pa labi
