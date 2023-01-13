@@ -4,6 +4,7 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 import time
 import numpy as np
+import cv2 as cv
 
 from griesanas_funkcijas import up, down, left, right, turning_enum
 
@@ -14,7 +15,10 @@ matrix[2, 2] = 0
 matrix[3, 2] = 0
 matrix[4, 4] = 0
 
-matrix = matrix.T
+cv.imshow('matrix', matrix.astype(np.uint8)*255)
+cv.waitKey(0)
+
+exit()
 
 grid = Grid(matrix=matrix)
 
