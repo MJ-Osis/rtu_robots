@@ -2,7 +2,7 @@ import numpy as np
 
 def visited_all(visited, grid):
     reachable_squares = np.count_nonzero(grid == 0)
-    return len(visited) == reachable_squares
+    return len([v for v in visited.values() if v > 0]) == reachable_squares
 
 def check_if_ahead_inside_grid(pos, grid_shape, facing):
     if facing == 'up':

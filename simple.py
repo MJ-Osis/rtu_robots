@@ -29,22 +29,23 @@ visited = {}
 for i in range(grid.shape[0]):
     for j in range(grid.shape[1]):
         if grid[i, j] == 0:
-            visited[(i, j)] = False
-            
-last_visited = pos
-visited_circle = []
+            visited[(i, j)] = 0
 
-# While there are still unvisited squares
-while not all(list(visited.values())):
-    
-    grid_canvas = rc.visualize_grid(grid)
-    rc.draw_robot(grid_canvas, pos, facing)
 
-    win = cv.namedWindow('grid', cv.WINDOW_NORMAL)
-    cv.imshow('grid', grid_canvas)
-    cv.waitKey(0)
+while True:
     
-    print("Current pos:", pos)
+    if rc.visited_all(visited, grid):
+        print('Visited all squares!')
+        break
+    
+    if VISUALIZE:
+        grid_canvas = rc.visualize_grid(grid)
+        rc.draw_robot(grid_canvas, pos, facing)
+        rc.draw_visited(grid_canvas, visited)
+
+        win = cv.namedWindow('grid', cv.WINDOW_NORMAL)
+        cv.imshow('grid', grid_canvas)
+        cv.waitKey(0)
     
     options = []
     
@@ -65,37 +66,34 @@ while not all(list(visited.values())):
         facing = rc.turn_left(facing, arduino)
         continue
         
-    if 'left' in options:
-        if not visited[tuple(rc.drive_forward(pos, rc.turn_left(facing, None), None))]:
-            facing = rc.turn_left(facing, arduino)
-            pos = rc.drive_forward(pos, facing, arduino)
-            print("Left", pos)
-            continue
-        
-    if 'forward' in options:
-        if not visited[tuple(rc.drive_forward(pos, facing, None))]:
-            pos = rc.drive_forward(pos, facing, arduino)
-            print("Forward", pos)
-            continue
-        
-    if 'right' in options:
-        if not visited[tuple(rc.drive_forward(pos, rc.turn_right(facing, None), None))]:
-            facing = rc.turn_right(facing, arduino)
-            pos = rc.drive_forward(pos, rc.turn_right(facing, None), None)
-            print("Right", pos)
-            continue
-        
-    if 'left' in options:
-        facing = rc.turn_left(facing, arduino)
-        pos = rc.drive_forward(pos, rc.turn_left(facing, None), None)
-        continue 
+    left_pos = rc.drive_forward(pos, rc.turn_left(facing, None), None)
+    forward_pos = rc.drive_forward(pos, facing, None)
+    right_pos = rc.drive_forward(pos, rc.turn_right(facing, None), None)
     
+    available_options = []
+    if 'left' in options:
+        available_options.append(left_pos)
     if 'forward' in options:
+        available_options.append(forward_pos)
+    if 'right' in options:
+        available_options.append(right_pos)
+        
+    available_options = sorted(available_options, key=lambda x: visited[tuple(x)])
+        
+    if available_options[0] == left_pos:
+        facing = rc.turn_left(facing, arduino)
+        visited[tuple(pos)] += 1
         pos = rc.drive_forward(pos, facing, None)
         continue
-     
-    if 'right' in options:
-        facing = rc.turn_right(facing, arduino)
-        pos = rc.drive_forward(pos, rc.turn_right(facing, None), None)
+    
+    if available_options[0] == forward_pos:
+        visited[tuple(pos)] += 1
+        pos = rc.drive_forward(pos, facing, None)
         continue
-        
+    
+    if available_options[0] == right_pos:
+        facing = rc.turn_right(facing, arduino)
+        visited[tuple(pos)] += 1
+        pos = rc.drive_forward(pos, facing, None)
+        continue
+            

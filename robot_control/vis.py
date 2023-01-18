@@ -37,3 +37,9 @@ def draw_robot(canvas, pos, facing, pix_per_square=100):
         
     cv.rectangle(canvas, square_pos, (square_pos[0] + pix_per_square // 4, square_pos[1] + pix_per_square // 4), (255, 255, 0), -1)
     
+    
+def draw_visited(canvas, visited, pix_per_square=100):
+    for pos, count in visited.items():
+        if count > 0:
+            cv.putText(canvas, str(count), (pos[1] * pix_per_square + pix_per_square // 2 - 10, pos[0] * pix_per_square + pix_per_square // 2 + 10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+    
