@@ -42,10 +42,7 @@ while True:
             loc = to_right
             visited_squares.append(loc)
             continue
-    
-        
-    
-    if dist > si
+
 
 
 
