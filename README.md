@@ -4,7 +4,7 @@ Kas jadara:
 
 Atver terminali
 
-git clone
+git clone https://github.com/march-o/rtu_robots.git
 
 cd rtu_robots
 
