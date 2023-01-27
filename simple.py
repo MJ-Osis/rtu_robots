@@ -42,6 +42,7 @@ while True:
         grid_canvas = rc.visualize_grid(grid)
         rc.draw_robot(grid_canvas, pos, facing)
         rc.draw_visited(grid_canvas, visited)
+        
 
         win = cv.namedWindow('grid', cv.WINDOW_NORMAL)
         cv.imshow('grid', grid_canvas)
